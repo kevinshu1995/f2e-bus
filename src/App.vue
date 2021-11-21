@@ -1,6 +1,8 @@
 <template>
-    <div class="grid main-grid-template w-screen h-screen">
-        <header>header</header>
+    <div class="grid app-grid-template w-screen h-screen bg-dark">
+        <header>
+            <Header />
+        </header>
         <main>
             <router-view :key="$route.name" />
         </main>
@@ -9,21 +11,25 @@
 </template>
 
 <script>
+import Header from "@/components/templates/Header.vue";
 export default {
     name: "App",
+    components: {
+        Header,
+    },
     setup() {},
 };
 </script>
 
 <style scoped>
-.main-grid-template {
+.app-grid-template {
     grid-template:
         "head" 64px
         "main" 1fr
         / 1fr;
 }
 @screen sm {
-    .main-grid-template {
+    .app-grid-template {
         grid-template:
             "head" 64px
             "main" 1fr
