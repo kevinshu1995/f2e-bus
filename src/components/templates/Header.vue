@@ -52,12 +52,20 @@
                         <div class="w-full h-full backdrop-blur flex items-center justify-center relative px-8">
                             <ul class="flex flex-col space-y-4">
                                 <li v-for="(link, i) in naviMobile" :key="`header-navi-mobile-${i}`">
-                                    <router-link :to="link.to" class="py-3 flex space-x-8 tracking-wider">
+                                    <Link
+                                        :to="link.to"
+                                        :class="[
+                                            'py-3 flex space-x-8 tracking-wider',
+                                            link.disabled && 'text-gray-600 cursor-default',
+                                        ]"
+                                        activeClass="text-highlight"
+                                        :disabled="link.disabled"
+                                    >
                                         <Icon :name="link.icon" class="w-5" />
                                         <span>
                                             {{ link.text }}
                                         </span>
-                                    </router-link>
+                                    </Link>
                                 </li>
                             </ul>
                             <div class="absolute left-0 top-0">
@@ -106,16 +114,19 @@ export default {
                 to: "/",
                 text: "主頁",
                 icon: "home",
+                disabled: false,
             },
             {
                 to: "/news",
                 text: "行動支付錢包",
                 icon: "wallet",
+                disabled: true,
             },
             {
                 to: "/qna",
                 text: "地圖中查看",
                 icon: "compass",
+                disabled: true,
             },
         ];
 
@@ -137,9 +148,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.router-link-active {
-    @apply text-highlight;
-}
-</style>
