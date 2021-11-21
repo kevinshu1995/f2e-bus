@@ -1,21 +1,25 @@
 <template>
-    <div class="grid app-grid-template w-screen h-screen bg-dark">
+    <div class="grid app-grid-template w-screen h-screen bg-dark text-grey-light">
         <header>
             <Header />
         </header>
         <main>
             <router-view :key="$route.name" />
         </main>
-        <footer class="hidden sm:block">footer</footer>
+        <footer class="hidden sm:block">
+            <Footer />
+        </footer>
     </div>
 </template>
 
 <script>
 import Header from "@/components/templates/Header.vue";
+import Footer from "@/components/templates/Footer.vue";
 export default {
     name: "App",
     components: {
         Header,
+        Footer,
     },
     setup() {},
 };

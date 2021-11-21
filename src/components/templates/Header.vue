@@ -1,5 +1,5 @@
 <template>
-    <Container class="w-full h-full text-grey-light">
+    <Container class="w-full h-full">
         <template #left>
             <img class="w-full" src="/assets/Logo-square.svg" alt="Da Bus square Logo" />
         </template>
