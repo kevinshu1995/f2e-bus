@@ -3,8 +3,14 @@
         <header>
             <Header />
         </header>
+
         <main>
-            <router-view :key="$route.name" />
+            <Container class="w-full h-full">
+                <template #left></template>
+                <template #main>
+                    <router-view :key="$route.name" />
+                </template>
+            </Container>
         </main>
         <footer class="hidden sm:block">
             <Footer />
@@ -13,6 +19,7 @@
 </template>
 
 <script>
+import Container from "@/components/templates/Container.vue";
 import Header from "@/components/templates/Header.vue";
 import Footer from "@/components/templates/Footer.vue";
 export default {
@@ -20,6 +27,7 @@ export default {
     components: {
         Header,
         Footer,
+        Container,
     },
     setup() {},
 };

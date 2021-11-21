@@ -3,7 +3,7 @@
         <div class="container-grid-left hidden sm:block">
             <slot name="left" />
         </div>
-        <div class="container-grid-center w-full">
+        <div class="container-grid-center w-full h-full">
             <slot name="main" />
         </div>
         <div class="container-grid-right hidden sm:block">
