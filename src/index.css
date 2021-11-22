@@ -4,10 +4,29 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    font-family: "Noto Sans TC", sans-serif;
-}
+@layer base {
+    body {
+        font-family: "Noto Sans TC", sans-serif;
+    }
 
+    [type="text"],
+    [type="email"],
+    [type="url"],
+    [type="password"],
+    [type="number"],
+    [type="date"],
+    [type="datetime-local"],
+    [type="month"],
+    [type="search"],
+    [type="tel"],
+    [type="time"],
+    [type="week"],
+    [multiple],
+    textarea,
+    select {
+        @apply outline-none border-none shadow-none;
+    }
+}
 /* Map style */
 .leaflet-container .leaflet-control-attribution {
     @apply !bg-black !bg-opacity-60 !text-white !text-opacity-60;
