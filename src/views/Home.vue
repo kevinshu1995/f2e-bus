@@ -47,7 +47,7 @@ import Button from "@/components/elements/Button.vue";
 import Search from "@/components/elements/form/Search.vue";
 import Alert from "@/components/elements/Alert.vue";
 import Map from "@/components/Map.vue";
-import ScrollStations from "@/components/ScrollStations.vue";
+import ScrollStations from "@/components/stations/ScrollStations.vue";
 
 import { ref } from "vue";
 export default {

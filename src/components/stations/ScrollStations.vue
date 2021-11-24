@@ -9,16 +9,7 @@
                 @after-resize="afterResize"
             >
                 <li class="">
-                    <div class="bg-grey-dark rounded-2xl py-4 px-6 w-full">
-                        <div class="space-y-3">
-                            <h4 class="text-xl text-primary">132</h4>
-                            <div class="flex flex-wrap -mx-4 text-paragraph">
-                                <div class="px-4 py-1 w-full sm:w-1/2">出發</div>
-                                <div class="px-4 py-1 w-full sm:w-1/2">返回</div>
-                                <div class="px-4 py-1 w-full sm:w-1/2">時間</div>
-                            </div>
-                        </div>
-                    </div>
+                    <StationCard />
                 </li>
             </Flicking>
         </div>
@@ -31,16 +22,7 @@
                 @after-resize="afterResize"
             >
                 <li class="">
-                    <div class="bg-grey-dark rounded-2xl py-4 px-6 w-full">
-                        <div class="space-y-3">
-                            <h4 class="text-xl text-primary">132</h4>
-                            <div class="flex flex-wrap -mx-4 text-paragraph">
-                                <div class="px-4 py-1 w-full sm:w-1/2">出發</div>
-                                <div class="px-4 py-1 w-full sm:w-1/2">返回</div>
-                                <div class="px-4 py-1 w-full sm:w-1/2">時間</div>
-                            </div>
-                        </div>
-                    </div>
+                    <StationCard />
                 </li>
             </Flicking>
         </div>
@@ -50,11 +32,14 @@
 <script>
 import Flicking from "@egjs/vue3-flicking";
 import "@egjs/vue3-flicking/dist/flicking.css";
+import StationCard from "@/components/stations/Card.vue";
+
 import { reactive, nextTick } from "vue";
 export default {
     name: "Scroll-stations",
     components: {
         Flicking,
+        StationCard,
     },
     setup() {
         const flickingOptions = reactive({
