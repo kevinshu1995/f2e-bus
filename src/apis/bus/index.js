@@ -91,6 +91,42 @@ export const GET_currentCity = async ({ lat = "", lng = "" }) => {
 };
 
 /**
+ *  GET /v2/Bus/StopOfRoute/City/{City}/{RouteName}
+ *  取得指定[縣市],[路線名稱]的市區公車路線站序資料
+ *  @param {Object} params { $select, $filter, $orderby, $top, $skip, $spatialFilter: required, health }
+ */
+export const GET_StopOfRoute = (city, RouteName, params = {}) => {
+    const query = Object.keys(params).length !== 0 ? `?${serialize(params)}` : "";
+    return axios.get(`/StopOfRoute/City/${city}/${RouteName}${query}`, {
+        ...config(new Date()),
+    });
+};
+
+/**
+ *  GET /v2/Bus/Shape/City/{City}
+ *  取得指定[縣市]的市區公車線型資料
+ *  @param {Object} params { $select, $filter, $orderby, $top, $skip, $spatialFilter: required, health }
+ */
+export const GET_busShape = (city, params = {}) => {
+    const query = Object.keys(params).length !== 0 ? `?${serialize(params)}` : "";
+    return axios.get(`/Shape/City/${city}${query}`, {
+        ...config(new Date()),
+    });
+};
+
+/**
+ *  GET /v2/Bus/Route/City/{City}
+ *  取得指定[縣市]的市區公車路線資料
+ *  @param {Object} params { $select, $filter, $orderby, $top, $skip, $spatialFilter: required, health }
+ */
+export const GET_busRouteInfo = (city, params = {}) => {
+    const query = Object.keys(params).length !== 0 ? `?${serialize(params)}` : "";
+    return axios.get(`/Route/City/${city}${query}`, {
+        ...config(new Date()),
+    });
+};
+
+/**
  *  GET /v2/Bus/EstimatedTimeOfArrival/NearBy
  *  取得指定[位置,範圍]的全臺公車預估到站資料(N1)
  *  @param {Object} params { $select, $filter, $orderby, $top, $skip, $spatialFilter: required, health }

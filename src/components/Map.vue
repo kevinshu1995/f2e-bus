@@ -21,6 +21,9 @@ export default {
         userPosition: {
             type: Array,
         },
+        busRoute: {
+            type: Object,
+        },
     },
 
     setup(props, { emit }) {

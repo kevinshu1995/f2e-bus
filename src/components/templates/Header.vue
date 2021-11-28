@@ -15,7 +15,13 @@
                     <nav class="col-span-5 md:col-span-4 flex w-full">
                         <ul class="flex space-x-8 mx-auto">
                             <li v-for="(link, i) in navi" :key="`header-navi-${i}`" class="flex">
-                                <router-link :to="link.to" class="transition-all py-2 px-4">
+                                <router-link
+                                    :to="link.to"
+                                    :class="[
+                                        'transition-all py-2 px-4',
+                                        link.disabled && 'text-gray-600 cursor-default',
+                                    ]"
+                                >
                                     {{ link.text }}
                                 </router-link>
                             </li>
@@ -99,14 +105,17 @@ export default {
             {
                 to: "/",
                 text: "主頁",
+                disabled: false,
             },
             {
-                to: "/news",
+                to: "/",
                 text: "最新消息",
+                disabled: true,
             },
             {
-                to: "/qna",
+                to: "/",
                 text: "常見問題",
+                disabled: true,
             },
         ];
         const naviMobile = [

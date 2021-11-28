@@ -2,19 +2,27 @@
     <Dialog :open="isOpen" @close="setIsOpen" class="fixed inset-0 z-50 overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen">
             <DialogOverlay class="bg-dark w-full bg-opacity-80 h-full absolute inset-0" />
-            <div class="relative max-w-sm w-full mx-auto px-4">
-                <div :class="['px-10 py-6 space-y-4', 'bg-grey-dark text-grey-light shadow-xl rounded-xl']">
+            <div :class="['relative w-full mx-auto px-4', maxWidth]">
+                <div :class="['px-10 py-6 space-y-4', 'bg-dark text-grey-light shadow-xl rounded-xl']">
                     <div class="space-y-1">
                         <DialogTitle v-if="title" class="text-xl">{{ title }}</DialogTitle>
                         <DialogDescription v-if="description">{{ description }}</DialogDescription>
                     </div>
 
-                    <p v-if="content" class="py-4">
-                        {{ content }}
-                    </p>
-                    <Button @click="setIsOpen(false)" padding="py-2 px-6" class="ml-auto" theme="highlight"
-                        >好的</Button
+                    <slot name="body" :setIsOpen="setIsOpen">
+                        <p v-if="content" class="py-4">
+                            {{ content }}
+                        </p>
+                    </slot>
+                    <Button
+                        v-if="hasConfirmBtn"
+                        @click="setIsOpen(false)"
+                        padding="py-2 px-6"
+                        class="ml-auto"
+                        theme="highlight"
                     >
+                        好的
+                    </Button>
                 </div>
             </div>
         </div>
@@ -33,6 +41,14 @@ export default {
         title: String,
         description: String,
         content: String,
+        hasConfirmBtn: {
+            type: Boolean,
+            default: true,
+        },
+        maxWidth: {
+            type: String,
+            default: "max-w-sm ",
+        },
     },
 
     setup() {

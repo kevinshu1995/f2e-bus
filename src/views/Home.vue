@@ -1,22 +1,23 @@
 <template>
     <div class="grid gap-5 home-grid-template w-full h-full pt-6 lg:pt-0 relative z-10">
-        <div class="home-grid-map rounded-2xl overflow-hidden">
+        <div class="home-grid-map rounded-2xl overflow-hidden relative z-20">
             <Map
                 @onMoveend="bindCurrentMap"
                 @onReadyMap="onReadyMap"
                 @onSelectStation="bindSelectedStaion"
                 :nearbyStations="bus.nearbyStations"
                 :userPosition="info.userPosition"
+                :busRoute="bus.busRoute"
             />
         </div>
-        <div class="home-grid-method">
+        <div class="home-grid-method relative z-30">
             <div class="space-y-8">
                 <div class="space-y-8">
                     <!-- Alert -->
                     <Alert> 目前僅限部分地區提供動態「預估到站時間」功能，敬請見諒。 </Alert>
                     <div class="space-y-5">
                         <!-- Search -->
-                        <SearchBus />
+                        <SearchBus @checkoutBusRoute="checkoutBusRoute" />
                         <!-- Buttons -->
                         <div class="flex w-full gap-4">
                             <Button icon="flag" class="flex-grow" disabled> 市區公車路線 </Button>
@@ -98,6 +99,7 @@ export default {
         });
         const bus = reactive({
             nearbyStations: null,
+            busRoute: null,
         });
         const timeFormat = (time = "", format = "YYYY/MM/DD HH:mm:ss") => {
             return dayjs(time).format(format);
@@ -266,6 +268,10 @@ export default {
             }
         }
 
+        function checkoutBusRoute(bus) {
+            bus.busRoute = bus;
+        }
+
         async function getNearby({ lat = null, lng = null }) {
             if (!lat || !lng) return;
             try {
@@ -287,6 +293,7 @@ export default {
             bindSelectedStaion,
             msgModal,
             modal,
+            checkoutBusRoute,
         };
     },
 };
