@@ -30,7 +30,7 @@ export default {
             type: String,
             default: "secondary",
             validator(value) {
-                return ["secondary"].includes(value);
+                return ["secondary", "highlight"].includes(value);
             },
         },
         disabled: Boolean,
@@ -39,6 +39,11 @@ export default {
     setup({ theme, disabled }, { emit }) {
         const themeColor = computed(() => {
             switch (theme) {
+                case "highlight":
+                    return [
+                        "border-grey-dark text-grey-dark bg-highlight",
+                        !disabled ? "hover:bg-opacity-80" : "border-opacity-50 text-opacity-50 cursor-not-allowed",
+                    ].join(" ");
                 case "secondary":
                 default:
                     return [

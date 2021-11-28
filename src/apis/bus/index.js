@@ -1,11 +1,14 @@
 import axios from "../interceptors";
 import { GetAuthorizationHeader } from "./authorization";
 import { serialize } from "@/apis/helpers";
+import { distance } from "@/plugins/mixins.js";
 
-const config = {
-    baseURL: "https://ptx.transportdata.tw/MOTC/v2/Bus",
-    "content-type": "application/json; charset=utf-8",
-    headers: GetAuthorizationHeader(),
+const config = date => {
+    return {
+        baseURL: "https://ptx.transportdata.tw/MOTC/v2/Bus",
+        "content-type": "application/json; charset=utf-8",
+        headers: GetAuthorizationHeader(date),
+    };
 };
 
 // https://ptx.transportdata.tw/MOTC?t=Tourism&v=2#!/Tourism/TourismApi_ScenicSpot
@@ -64,71 +67,137 @@ export const getRandomCity = async () => {
 };
 
 /**
- *  GET /v2/Bike/Station/{City}
- *  取得指定[縣市]的公共自行車租借站位資料
- *  @params City {Object}
- *  @params params { $select, $filter, $orderby, $top, $skip, $spatialFilter, health }
+ *
+ * @param {*} params
+ * @returns
  */
-// export const getBikeStations = (City, params = {}) => {
-//     const query = Object.keys(params).length !== 0 ? `?${serialize(params)}` : "";
-
-//     return axios.get(`/Station/${City}${query}`, {
-//         ...config,
-//     });
-// };
+export const GET_currentCity = async ({ lat = "", lng = "" }) => {
+    if (!lat || !lng) return null;
+    try {
+        const nearbyStops = await GET_NearbyStops({
+            $spatialFilter: `nearby(${lat}, ${lng}, 1000)`,
+            $filter: `City ne null`,
+        });
+        return nearbyStops.reduce((target, current) => {
+            const { PositionLon, PositionLat } = current.StopPosition;
+            const currentDistance = distance([PositionLon, PositionLat], [lat, lng]);
+            if (!target.distance || target.distance > currentDistance) return { ...current, currentDistance };
+            return target;
+        }, {});
+    } catch (error) {
+        console.error("GET_currentCity", error);
+        return null;
+    }
+};
 
 /**
- *  GET /v2/Bike/Availability/{City}
- *  取得動態指定[縣市]的公共自行車即時車位資料
- *  @params City {Object}
- *  @params params { $select, $filter, $orderby, $top, $skip, $spatialFilter, health }
+ *  GET /v2/Bus/EstimatedTimeOfArrival/NearBy
+ *  取得指定[位置,範圍]的全臺公車預估到站資料(N1)
+ *  @param {Object} params { $select, $filter, $orderby, $top, $skip, $spatialFilter: required, health }
  */
-// export const getBikeAvailability = (City, params = {}) => {
-//     const query = Object.keys(params).length !== 0 ? `?${serialize(params)}` : "";
-
-//     return axios.get(`/Availability/${City}${query}`, {
-//         ...config,
-//     });
-// };
+export const GET_NearbyEstimatedTimeOfArrival = (params = {}) => {
+    const query = Object.keys(params).length !== 0 ? `?${serialize(params)}` : "";
+    return axios.get(`/EstimatedTimeOfArrival/NearBy${query}`, {
+        ...config(new Date()),
+    });
+};
 
 /**
- *  GET /v2/Cycling/Shape/{City}
- *  取得指定縣市之自行車道路網圖資
- *  @params City {Object}
- *  @params params { $select, $filter, $orderby, $top, $skip, $spatialFilter, health }
+ *  GET /v2/Bus/EstimatedTimeOfArrival/City/{City}/PassThrough/Station/{StationID}
+ *  取得指定[縣市],[站位]的市區公車預估到站資料(N1)
+ *  @param {String} City
+ *  @param {String} StationID
+ *  @param {Object} params { $select, $filter, $orderby, $top, $skip, $spatialFilter: required, health }
  */
-// export const getCyclingShape = (City, params = {}) => {
-//     const query = Object.keys(params).length !== 0 ? `?${serialize(params)}` : "";
-
-//     return axios.get(`/Cycling/Shape/${City}${query}`, {
-//         ...config,
-//     });
-// };
+export const GET_StationEstimatedTimeOfArrival = (city = "", stationId = "", params = {}) => {
+    const query = Object.keys(params).length !== 0 ? `?${serialize(params)}` : "";
+    return axios.get(`/EstimatedTimeOfArrival/City/${city}/PassThrough/Station/${stationId}${query}`, {
+        ...config(new Date()),
+    });
+};
 
 /**
- *  GET /v2/Bike/Station/NearBy
- *  取得指定[位置,範圍]的全臺公共自行車租借站位資料
- *  @params City {Object}
- *  @params params { $select, $filter, $orderby, $top, $skip, $spatialFilter, health }
+ *  /v2/Bus/RealTimeNearStop/City/{City}/PassThrough/Station/{StationID}
+ *  取得指定[縣市],[站位]的市區公車動態定點資料(A2)
+ *  @param {String} City
+ *  @param {String} StationID
+ *  @param {Object} params { $select, $filter, $orderby, $top, $skip, $spatialFilter: required, health }
  */
-// export const getBikeStationNearBy = (params = {}) => {
-//     const query = Object.keys(params).length !== 0 ? `?${serialize(params)}` : "";
-
-//     return axios.get(`/Bike/Station/NearBy${query}`, {
-//         ...config,
-//     });
-// };
+export const GET_StationRealTimeNearStop = (city = "", stationId = "", params = {}) => {
+    const query = Object.keys(params).length !== 0 ? `?${serialize(params)}` : "";
+    return axios.get(`/RealTimeNearStop/City/${city}/PassThrough/Station/${stationId}${query}`, {
+        ...config(new Date()),
+    });
+};
 
 /**
- *  GET /v2/Bike/Availability/NearBy
- *  取得指定[位置,範圍]的全臺公共自行車即時車位資料
- *  @params City {Object}
- *  @params params { $select, $filter, $orderby, $top, $skip, $spatialFilter, health }
+ *  GET /v2/Bus/Route/City/{City}/PassThrough/Station/{StationID}
+ *  取得指定[縣市],[站位]的市區公車路線資料
+ *  @param {String} City
+ *  @param {String} StationID
+ *  @param {Object} params { $select, $filter, $orderby, $top, $skip, $spatialFilter: required, health }
  */
-// export const getBikeAvailabilityNearBy = (params = {}) => {
-//     const query = Object.keys(params).length !== 0 ? `?${serialize(params)}` : "";
+export const GET_RouteInfo = (city = "", stationId = "", params = {}) => {
+    const query = Object.keys(params).length !== 0 ? `?${serialize(params)}` : "";
+    return axios.get(`/Route/City/${city}/PassThrough/Station/${stationId}${query}`, {
+        ...config(new Date()),
+    });
+};
 
-//     return axios.get(`/Bike/Availability/NearBy${query}`, {
-//         ...config,
-//     });
-// };
+/**
+ *  /v2/Bus/Stop/NearBy
+ *  取得指定[位置,範圍]的全臺公車站牌資料
+ *  @param {Object} params { $select, $filter, $orderby, $top, $skip, $spatialFilter, health }
+ */
+export const GET_NearbyStops = (params = {}) => {
+    const query = Object.keys(params).length !== 0 ? `?${serialize(params)}` : "";
+
+    return axios.get(`/Stop/NearBy${query}`, {
+        ...config(new Date()),
+    });
+};
+
+/**
+ *  GET /v2/Bus/Station/NearBy
+ *  取得指定[位置,範圍]的全臺公車站位資料
+ *  @param {Object} params { $select, $filter, $orderby, $top, $skip, $spatialFilter, health }
+ */
+export const GET_NearbyStations = (params = {}) => {
+    const query = Object.keys(params).length !== 0 ? `?${serialize(params)}` : "";
+
+    return axios.get(`/Station/NearBy${query}`, {
+        ...config(new Date()),
+    });
+};
+
+export function ISO_cityCode(cityCode = "") {
+    const iso_to_cityValue = {
+        TPE: "Taipei",
+        NWT: "NewTaipei",
+        TAO: "Taoyuan",
+        TXG: "Taichung",
+        TNN: "Tainan",
+        KHH: "Kaohsiung",
+        KEE: "Keelung",
+        HSZ: "Hsinchu",
+        HSQ: "HsinchuCounty",
+        MIA: "MiaoliCounty",
+        CHA: "ChanghuaCounty",
+        NAN: "NantouCounty",
+        YUN: "YunlinCounty",
+        CYQ: "ChiayiCounty",
+        CYI: "Chiayi",
+        PIF: "PingtungCounty",
+        ILA: "YilanCounty",
+        HUA: "HualienCounty",
+        TTT: "TaitungCounty",
+        KIN: "KinmenCounty",
+        PEN: "PenghuCounty",
+        LIE: "LienchiangCounty",
+    };
+    if (!iso_to_cityValue[cityCode]) {
+        console.log("找不到 city code");
+        return "";
+    }
+    return iso_to_cityValue[cityCode];
+}
