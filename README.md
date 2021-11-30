@@ -24,3 +24,7 @@ npm run build
 4. leaflet
 5. Axios
 
+## API
+
+資料介接「交通部PTX平臺」
+![PTX_logo深背景使用](https://user-images.githubusercontent.com/56685204/144094708-17f06165-783d-484b-aa1a-27128b3bde2e.png)
