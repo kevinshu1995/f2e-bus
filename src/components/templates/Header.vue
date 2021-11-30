@@ -1,7 +1,7 @@
 <template>
     <Container class="w-full h-full">
         <template #left>
-            <img class="w-full" src="/assets/Logo-square.svg" alt="Da Bus square Logo" />
+            <img class="w-full" src="/logo-square.png" alt="Da Bus square Logo" />
         </template>
         <template #main>
             <div class="flex items-center h-full w-full">
@@ -9,7 +9,7 @@
                 <div class="hidden sm:grid grid-cols-6 w-full">
                     <div class="col-span-1 flex items-center">
                         <router-link to="/" class="mx-auto hover:scale-105 transition-all">
-                            <img class="max-w-[80px]" src="/assets/Logo.svg" alt="Da Bus horizon Logo" />
+                            <img class="max-w-[80px]" src="/logo.png" alt="Da Bus horizon Logo" />
                         </router-link>
                     </div>
                     <nav class="col-span-5 md:col-span-4 flex w-full">
@@ -40,7 +40,7 @@
                     </div>
                     <div class="px-2">
                         <router-link to="/" class="mx-auto px-4 py-2 hover:scale-105 transition-all">
-                            <img class="mx-auto max-w-[80px]" src="/assets/Logo.svg" alt="Da Bus horizon Logo" />
+                            <img class="mx-auto max-w-[80px]" src="/logo.png" alt="Da Bus horizon Logo" />
                         </router-link>
                     </div>
                     <div class="-mx-2 flex">
@@ -93,7 +93,7 @@
 
 <script>
 import Container from "@/components/templates/Container.vue";
-import { ref, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 export default {
     name: "Header",
